@@ -1,18 +1,23 @@
+import re
 
-count = 0
+with open('area-2019.csv', 'r') as f:
 
-with open('area-2019_a.csv', 'w+') as fa:
-    with open('area-2019.csv', 'r') as f:
-        for line in f:
-            count += 1
-            if count == 2:
-                l2 = line.strip()
-                # print(l2)
-            if count == 3:
-                # ,を削除して結合
-                l3 = l2 + line.strip()[2:]
-                # print(l3)
-                fa.write(l3)
-            if count == 4:
-                fa.write(line)
-                break
+    header = ''
+    data_list = []
+
+    for line in f:
+
+        if re.search('供給力$', line):
+            header = line.strip()[:-4]
+
+        if re.search('^,,,', line):
+            header = header + line.strip()[2:]
+
+        if ':' in line:
+            data_list.append(line.strip())
+
+print(header)
+for data in data_list:
+    print(data)
+
+
