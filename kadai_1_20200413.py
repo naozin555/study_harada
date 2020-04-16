@@ -1,6 +1,4 @@
 import re
-import csv
-import numpy as np
 
 with open('area-2019.csv', 'r') as f:
 
@@ -19,40 +17,36 @@ with open('area-2019.csv', 'r') as f:
             data_list.append(line.strip())
 
 
-header = header.split(',')
-print(header)
+headers = header.split(',')
+print(headers)
 
-for i, data in enumerate(data_list):
-    data_list[i] = data.split(',')
-# print(data_list)
 
-index_Date = header.index('DATE')
-# index_Time = header.index('Time')
-index_Demand = header.index('東京エリア需要')
-# index_Nuclear = header.index('原子力')
-# index_Thermal = header.index('火力')
-# index_Water = header.index('水力')
-# index_Geothermal = header.index('地熱')
-# index_Biomass = header.index('バイオマス')
-# index_Solar = header.index('太陽光発電実績')
-# index_ControlledSolar = header.index('太陽光出力制御量')
-# index_Wind = header.index('風力発電実績')
-# index_ControlledWind = header.index('風力出力制御量')
-# index_PumpedWater = header.index('揚水')
-# index_Interconnection = header.index('連系線')
-# index_Total = header.index('合計')
+class Data(object):
+    def __init__(self, date, time, demand, nuclear, thermal, water, geo_thermal,
+                 biomass, solar, controlled_solar, wind, controlled_wind,
+                 pumped_water, interconnection, total):
+        self.date = date
+        self.time = time
+        self.demand = demand
+        self.nuclear = nuclear
+        self.thermal = thermal
+        self.water = water
+        self.geo_thermal = geo_thermal
+        self.biomass = biomass
+        self.solar = solar
+        self.controlled_solar = controlled_solar
+        self.wind = wind
+        self.controlled_wind = controlled_wind
+        self.pumped_water = pumped_water
+        self.interconnection = interconnection
+        self.total = total
 
-years = [2019, 2020]
-num_months = 12
-ym = [0]*12
-data_Demand = []
-for year in years:
-    for month in range(num_months):
-        ym[month-1] = str(year) + "/" + str(month) + "/"
-        print(ym[month-1])
-        for i, data in enumerate(data_list):
-            if data[index_Date].startswith(ym[month-1]):
-                data_Demand[i][].append(data[index_Demand])
-                print(data_Demand)
-        sum(data_Demand[i])
+# for i
+#     data = Data(data_list[0][i], data_list[1][i], data_list[2][i], data_list[3][i],
+#                 data_list[4][i], data_list[5][i], data_list[6][i], data_list[8][i],
+#                 data_list[9][i], data_list[10][i], data_list[11][i], data_list[12][i],
+#                 data_list[13][i], data_list[14][i], data_list[15][i])
+#
+# print(data_list[1])
+
 
