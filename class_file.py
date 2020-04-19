@@ -100,14 +100,4 @@ class Data(object):
         print('揚水：{:.2f}%'.format(datas_list[10]))
         print('連系線：{:.2f}%'.format(datas_list[11]))
 
-        # print(' 原子力：{:.2f}%'.format(percentage_nuclear_2019_4))
-        # print('2019/4 火力：{:.2f}%'.format(percentage_thermal_2019_4))
-        # print('2019/4 水力：{:.2f}%'.format(percentage_water_2019_4))
-        # print('2019/4 地熱：{:.2f}%'.format(percentage_geo_thermal_2019_4))
-        # print('2019/4 バイオマス：{:.2f}%'.format(percentage_biomass_2019_4))
-        # print('2019/4 太陽光発電実績：{:.2f}%'.format(percentage_solar_2019_4))
-        # print('2019/4 太陽光出力制御量：{:.2f}%'.format(percentage_controlled_solar_2019_4))
-        # print('2019/4 風力発電実績：{:.2f}%'.format(percentage_wind_2019_4))
-        # print('2019/4 風力出力制御量：{:.2f}%'.format(percentage_controlled_wind_2019_4))
-        # print('2019/4 揚水：{:.2f}%'.format(percentage_pumped_water_2019_4))
-        # print('2019/4 連系線：{:.2f}%'.format(percentage_interconnection_2019_4))
+     
