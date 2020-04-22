@@ -1,63 +1,61 @@
 from class_file import Data
 
 
-class Serve(object):
+class Service(object):
 
     # データを格納するメソッド
     def input_data(self):
         datas_list = []
         for data in self:
-            datas = Data(data.split(',')[0], data.split(',')[1],
-                         data.split(',')[2], data.split(',')[3],
-                         data.split(',')[4], data.split(',')[5],
-                         data.split(',')[6], data.split(',')[7],
-                         data.split(',')[8], data.split(',')[9],
-                         data.split(',')[10], data.split(',')[11],
-                         data.split(',')[12], data.split(',')[13],
-                         data.split(',')[14]
+            splited_data = data.split(',')
+            datas = Data(splited_data[0], splited_data[1], splited_data[2],
+                         splited_data[3], splited_data[4], splited_data[5],
+                         splited_data[6], splited_data[7], splited_data[8],
+                         splited_data[9], splited_data[10], splited_data[11],
+                         splited_data[12], splited_data[13], splited_data[14]
                          )
             datas_list.append(datas)
         return datas_list
 
     # 月の需給合計を計算するメソッド
     def sum_month(self, month):
-        total_demand = 0
-        total_nuclear = 0
-        total_thermal = 0
-        total_water = 0
-        total_geo_thermal = 0
-        total_biomass = 0
-        total_solar = 0
-        total_controlled_solar = 0
-        total_wind = 0
-        total_controlled_wind = 0
-        total_pumped_water = 0
-        total_interconnection = 0
-        total_total_supply = 0
+        sum_demand = 0
+        sum_nuclear = 0
+        sum_thermal = 0
+        sum_water = 0
+        sum_geo_thermal = 0
+        sum_biomass = 0
+        sum_solar = 0
+        sum_controlled_solar = 0
+        sum_wind = 0
+        sum_controlled_wind = 0
+        sum_pumped_water = 0
+        sum_interconnection = 0
+        sum_total_supply = 0
 
         ym = month.strftime("{}/{}".format(month.year, month.month))
         for data_every_hour in self:
             if data_every_hour.date.startswith(ym):
-                total_demand += int(data_every_hour.demand)
-                total_nuclear += int(data_every_hour.nuclear)
-                total_thermal += int(data_every_hour.thermal)
-                total_water += int(data_every_hour.water)
-                total_geo_thermal += int(data_every_hour.geo_thermal)
-                total_biomass += int(data_every_hour.biomass)
-                total_solar += int(data_every_hour.solar)
-                total_controlled_solar += int(data_every_hour.controlled_solar)
-                total_wind += int(data_every_hour.wind)
-                total_controlled_wind += int(data_every_hour.controlled_wind)
-                total_pumped_water += int(data_every_hour.pumped_water)
-                total_interconnection += int(data_every_hour.interconnection)
-                total_total_supply += int(data_every_hour.total_supply)
+                sum_demand += int(data_every_hour.demand)
+                sum_nuclear += int(data_every_hour.nuclear)
+                sum_thermal += int(data_every_hour.thermal)
+                sum_water += int(data_every_hour.water)
+                sum_geo_thermal += int(data_every_hour.geo_thermal)
+                sum_biomass += int(data_every_hour.biomass)
+                sum_solar += int(data_every_hour.solar)
+                sum_controlled_solar += int(data_every_hour.controlled_solar)
+                sum_wind += int(data_every_hour.wind)
+                sum_controlled_wind += int(data_every_hour.controlled_wind)
+                sum_pumped_water += int(data_every_hour.pumped_water)
+                sum_interconnection += int(data_every_hour.interconnection)
+                sum_total_supply += int(data_every_hour.total_supply)
 
         total_time = 'XXX'
-        sum_month = Data(ym, total_time, total_demand, total_nuclear,
-                         total_thermal, total_water, total_geo_thermal,
-                         total_biomass, total_solar, total_controlled_solar,
-                         total_wind, total_controlled_wind, total_pumped_water,
-                         total_interconnection, total_total_supply
+        sum_month = Data(ym, total_time, sum_demand, sum_nuclear,
+                         sum_thermal, sum_water, sum_geo_thermal,
+                         sum_biomass, sum_solar, sum_controlled_solar,
+                         sum_wind, sum_controlled_wind, sum_pumped_water,
+                         sum_interconnection, sum_total_supply
                          )
         return sum_month
 
@@ -65,7 +63,7 @@ class Serve(object):
     def percentage_month(self):
         date = self.date
         time = self.time
-        percentage_demand = self.demand / self.total_supply *100
+        percentage_demand = self.demand / self.total_supply * 100
         percentage_nuclear = self.nuclear / self.total_supply * 100
         percentage_thermal = self.thermal / self.total_supply * 100
         percentage_water = self.water / self.total_supply * 100
