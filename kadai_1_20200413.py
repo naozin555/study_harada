@@ -1,2 +1,2 @@
-with open('area-2019.csv', 'r') as f:
-    print(f.read())
+from controller import Controller
+Controller.execute('area-2019.csv')
