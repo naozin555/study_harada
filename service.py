@@ -94,16 +94,16 @@ class Service(object):
 
     # 月の需給を表示するメソッド
     def display(self):
-        print('年月：' + self.date,
-              '原子力：{:.2f}%'.format(self.nuclear),
-              '火力：{:.2f}%'.format(self.thermal),
-              '水力：{:.2f}%'.format(self.water),
-              '地熱：{:.2f}%'.format(self.geo_thermal),
-              'バイオマス：{:.2f}%'.format(self.biomass),
-              '太陽光発電実績：{:.2f}%'.format(self.solar),
-              '太陽光出力制御量：{:.2f}%'.format(self.controlled_solar),
-              '風力発電実績：{:.2f}%'.format(self.wind),
-              '風力出力制御量：{:.2f}%'.format(self.controlled_wind),
-              '揚水：{:.2f}%'.format(self.pumped_water),
+        print('年月：' + self.date + ',',
+              '原子力：{:.2f}%,'.format(self.nuclear),
+              '火力：{:.2f}%,'.format(self.thermal),
+              '水力：{:.2f}%,'.format(self.water),
+              '地熱：{:.2f}%,'.format(self.geo_thermal),
+              'バイオマス：{:.2f}%,'.format(self.biomass),
+              '太陽光発電実績：{:.2f}%,'.format(self.solar),
+              '太陽光出力制御量：{:.2f}%,'.format(self.controlled_solar),
+              '風力発電実績：{:.2f}%,'.format(self.wind),
+              '風力出力制御量：{:.2f}%,'.format(self.controlled_wind),
+              '揚水：{:.2f}%,'.format(self.pumped_water),
               '連系線：{:.2f}%'.format(self.interconnection)
               )

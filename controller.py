@@ -35,7 +35,6 @@ class Controller(object):
         month_list.append(start_date)
         for m in range(m_period):
             month_list.append(month_list[m] + relativedelta(months=1))
-        print(month_list)
 
         for month in month_list:
             sum_month = Service.sum_month(datas_list, month)
