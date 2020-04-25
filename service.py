@@ -1,7 +1,28 @@
+import re
+
 from class_file import Data
 
 
 class Service(object):
+
+    # ファイルを開いて，生データを変数に格納するメソッド
+    def file_open(self):
+        with open(self, 'r') as f:
+
+            header = ''
+            data_list = []
+
+            for line in f:
+
+                if re.search('供給力$', line):
+                    header = line.strip()[:-4]
+
+                if re.search('^,,,', line):
+                    header = header + line.strip()[2:]
+
+                if ':' in line:
+                    data_list.append(line.strip())
+        return header, data_list
 
     # データを格納するメソッド
     def input_data(self):
@@ -107,3 +128,77 @@ class Service(object):
               '揚水：{:.2f}%,'.format(self.pumped_water),
               '連系線：{:.2f}%'.format(self.interconnection)
               )
+
+
+class ServiceKansai(object):
+    def file_open(self):
+        with open(self, 'r') as f:
+
+            header = ''
+            data_list = []
+
+            for line in f:
+                if re.search('^DATE_TIME', line):
+                    header = line.strip()[0:10] + 'TIME,' \
+                             + line.strip()[10:] + ',合計〔MWh〕'
+                if re.search('^,,,', line):
+                    header = header + line.strip()[2:]
+                if ':' in line:
+                    data_list.append(line.strip())
+        return header, data_list
+
+    # データを格納するメソッド
+    def input_data(self):
+        datas_list = []
+        for data in self:
+            splited_data = data.split(',')
+            datas = Data(splited_data[0], 0, splited_data[1], splited_data[2],
+                         splited_data[3], splited_data[4], splited_data[5],
+                         splited_data[6], splited_data[7], splited_data[8],
+                         splited_data[9], splited_data[10], splited_data[11],
+                         splited_data[12], 0
+                         )
+            datas_list.append(datas)
+        return datas_list
+
+    # 月の需給合計を計算するメソッド
+    def sum_month(self, month):
+        sum_demand = 0
+        sum_nuclear = 0
+        sum_thermal = 0
+        sum_water = 0
+        sum_geo_thermal = 0
+        sum_biomass = 0
+        sum_solar = 0
+        sum_controlled_solar = 0
+        sum_wind = 0
+        sum_controlled_wind = 0
+        sum_pumped_water = 0
+        sum_interconnection = 0
+        sum_total_supply = 0
+
+        ym = month.strftime("{}/{}".format(month.year, month.month))
+        for data_every_hour in self:
+            if data_every_hour.date.startswith(ym):
+                sum_demand += int(data_every_hour.demand)
+                sum_nuclear += int(data_every_hour.nuclear)
+                sum_thermal += int(data_every_hour.thermal)
+                sum_water += int(data_every_hour.water)
+                sum_geo_thermal += int(data_every_hour.geo_thermal)
+                sum_biomass += int(data_every_hour.biomass)
+                sum_solar += int(data_every_hour.solar)
+                sum_controlled_solar += int(data_every_hour.controlled_solar)
+                sum_wind += int(data_every_hour.wind)
+                sum_controlled_wind += int(data_every_hour.controlled_wind)
+                sum_pumped_water += int(data_every_hour.pumped_water)
+                sum_interconnection += int(data_every_hour.interconnection)
+                sum_total_supply += int(data_every_hour.demand)
+
+        total_time = 'XXX'
+        sum_month = Data(ym, total_time, sum_demand, sum_nuclear,
+                         sum_thermal, sum_water, sum_geo_thermal,
+                         sum_biomass, sum_solar, sum_controlled_solar,
+                         sum_wind, sum_controlled_wind, sum_pumped_water,
+                         sum_interconnection, sum_total_supply
+                         )
+        return sum_month
