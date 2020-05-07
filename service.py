@@ -38,8 +38,8 @@ class Service(object):
             datas_list.append(datas)
         return datas_list
 
-    # 月の需給合計を計算するメソッド
-    def sum_month(self, month):
+    # 需給合計を計算するメソッド
+    def sum(self, date):
         sum_demand = 0
         sum_nuclear = 0
         sum_thermal = 0
@@ -54,9 +54,9 @@ class Service(object):
         sum_interconnection = 0
         sum_total_supply = 0
 
-        ym = month.strftime("{}/{}".format(month.year, month.month))
+        date = date.strftime("{}/{}".format(date.year, date.month))
         for data_every_hour in self:
-            if data_every_hour.date.startswith(ym):
+            if data_every_hour.date.startswith(date):
                 sum_demand += int(data_every_hour.demand)
                 sum_nuclear += int(data_every_hour.nuclear)
                 sum_thermal += int(data_every_hour.thermal)
@@ -69,19 +69,30 @@ class Service(object):
                 sum_controlled_wind += int(data_every_hour.controlled_wind)
                 sum_pumped_water += int(data_every_hour.pumped_water)
                 sum_interconnection += int(data_every_hour.interconnection)
-                sum_total_supply += int(data_every_hour.total_supply)
+                total_supply = int(data_every_hour.nuclear) \
+                               + int(data_every_hour.thermal) \
+                               + int(data_every_hour.water) \
+                               + int(data_every_hour.geo_thermal) \
+                               + int(data_every_hour.biomass) \
+                               + int(data_every_hour.solar) \
+                               + int(data_every_hour.controlled_solar) \
+                               + int(data_every_hour.wind) \
+                               + int(data_every_hour.controlled_wind) \
+                               + int(data_every_hour.pumped_water) \
+                               + int(data_every_hour.interconnection)
+                sum_total_supply = sum_total_supply + total_supply
 
         total_time = 'XXX'
-        sum_month = Data(ym, total_time, sum_demand, sum_nuclear,
-                         sum_thermal, sum_water, sum_geo_thermal,
-                         sum_biomass, sum_solar, sum_controlled_solar,
-                         sum_wind, sum_controlled_wind, sum_pumped_water,
-                         sum_interconnection, sum_total_supply
-                         )
-        return sum_month
+        sum = Data(date, total_time, sum_demand, sum_nuclear,
+                   sum_thermal, sum_water, sum_geo_thermal,
+                   sum_biomass, sum_solar, sum_controlled_solar,
+                   sum_wind, sum_controlled_wind, sum_pumped_water,
+                   sum_interconnection, sum_total_supply
+                   )
+        return sum
 
-    # 月の需給割合を計算するメソッド
-    def percentage_month(self):
+    # 需給割合を計算するメソッド
+    def percentage(self):
         date = self.date
         time = self.time
         percentage_demand = self.demand / self.total_supply * 100
@@ -101,20 +112,20 @@ class Service(object):
                                      self.total_supply * 100
         percentage_total_supply = self.total_supply / self.total_supply * 100
 
-        percentage_month = Data(date, time, percentage_demand,
-                                percentage_nuclear, percentage_thermal,
-                                percentage_water, percentage_geo_thermal,
-                                percentage_biomass, percentage_solar,
-                                percentage_controlled_solar, percentage_wind,
-                                percentage_controlled_wind,
-                                percentage_pumped_water,
-                                percentage_interconnection,
-                                percentage_total_supply
-                                )
-        return percentage_month
+        percentage = Data(date, time, percentage_demand,
+                          percentage_nuclear, percentage_thermal,
+                          percentage_water, percentage_geo_thermal,
+                          percentage_biomass, percentage_solar,
+                          percentage_controlled_solar, percentage_wind,
+                          percentage_controlled_wind,
+                          percentage_pumped_water,
+                          percentage_interconnection,
+                          percentage_total_supply
+                          )
+        return percentage
 
     # 月の需給を表示するメソッド
-    def display(self):
+    def display_month(self):
         print('年月：' + self.date + ',',
               '原子力：{:.2f}%,'.format(self.nuclear),
               '火力：{:.2f}%,'.format(self.thermal),
@@ -130,7 +141,7 @@ class Service(object):
               )
 
 
-class ServiceKansai(object):
+class ServiceKansai(Service):
     def file_open(self):
         with open(self, 'r') as f:
 
@@ -161,44 +172,14 @@ class ServiceKansai(object):
             datas_list.append(datas)
         return datas_list
 
-    # 月の需給合計を計算するメソッド
-    def sum_month(self, month):
-        sum_demand = 0
-        sum_nuclear = 0
-        sum_thermal = 0
-        sum_water = 0
-        sum_geo_thermal = 0
-        sum_biomass = 0
-        sum_solar = 0
-        sum_controlled_solar = 0
-        sum_wind = 0
-        sum_controlled_wind = 0
-        sum_pumped_water = 0
-        sum_interconnection = 0
-        sum_total_supply = 0
 
-        ym = month.strftime("{}/{}".format(month.year, month.month))
-        for data_every_hour in self:
-            if data_every_hour.date.startswith(ym):
-                sum_demand += int(data_every_hour.demand)
-                sum_nuclear += int(data_every_hour.nuclear)
-                sum_thermal += int(data_every_hour.thermal)
-                sum_water += int(data_every_hour.water)
-                sum_geo_thermal += int(data_every_hour.geo_thermal)
-                sum_biomass += int(data_every_hour.biomass)
-                sum_solar += int(data_every_hour.solar)
-                sum_controlled_solar += int(data_every_hour.controlled_solar)
-                sum_wind += int(data_every_hour.wind)
-                sum_controlled_wind += int(data_every_hour.controlled_wind)
-                sum_pumped_water += int(data_every_hour.pumped_water)
-                sum_interconnection += int(data_every_hour.interconnection)
-                sum_total_supply += int(data_every_hour.demand)
-
-        total_time = 'XXX'
-        sum_month = Data(ym, total_time, sum_demand, sum_nuclear,
-                         sum_thermal, sum_water, sum_geo_thermal,
-                         sum_biomass, sum_solar, sum_controlled_solar,
-                         sum_wind, sum_controlled_wind, sum_pumped_water,
-                         sum_interconnection, sum_total_supply
-                         )
-        return sum_month
+class Compare(object):
+    def compare(self, tokyo_data, kansai_data):
+        tokyo_thermal_and_nuclear = tokyo_data.thermal + tokyo_data.nuclear
+        print('東京電力　原子力：{:.2f}% + 火力：{:.2f}% = {:.2f}%'
+              .format(tokyo_data.nuclear, tokyo_data.thermal,
+                      tokyo_thermal_and_nuclear))
+        kansai_thermal_and_nuclear = kansai_data.thermal + kansai_data.nuclear
+        print('関西電力　原子力：{:.2f}% + 火力：{:.2f}% = {:.2f}%'
+              .format(kansai_data.nuclear, kansai_data.thermal,
+                      kansai_thermal_and_nuclear))
