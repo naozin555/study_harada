@@ -156,9 +156,7 @@ class Service(object):
         dict_size = len(self)
         dict_values = list(self.values())
         dict_headers = list(self.keys())
-        print(dict_values)
-        print(dict_headers)
-        for i in 0, dict_size-1, 1:
+        for i in range(0, dict_size-1, 1):
             for j in range(1, dict_size-1-i, 1):
                 if dict_values[j] < dict_values[j + 1]:
                     tmp_dict = {dict_headers[j + 1]: dict_values[j + 1]}
@@ -166,10 +164,31 @@ class Service(object):
                     tmp_value = dict_values[j]
                     dict_values[j] = dict_values[j + 1]
                     dict_values[j + 1] = tmp_value
-                    tmp_header = dict_headers[j + 1]
-                    dict_headers[j] = dict_headers[j]
+                    tmp_header = dict_headers[j]
+                    dict_headers[j] = dict_headers[j + 1]
                     dict_headers[j + 1] = tmp_header
-        print(sorted_data)
+        return dict_headers, dict_values
+
+    def power_supply_analysis(self):
+        main_power_supply = []
+        sum = 0
+        for i in range(1, len(self[1]) - 1, 1):
+            if sum < 70.0:
+                sum = sum + self[1][i]
+                main_power_supply.append(self[0][i])
+        return main_power_supply
+
+    def compare(self, tokyo_main_power_supply, kansai_main_power_supply):
+        for i in range(0, len(self), 1):
+            tokyo_kansai_diff = set(tokyo_main_power_supply[i]) ^ set(kansai_main_power_supply[i])
+            print(self[i].strftime("{}/{}".format(self[i].year, self[i].month)))
+            print('東京電力のメイン電源は' + str(tokyo_main_power_supply[i]) + 'です。')
+            print('関西電力のメイン電源は' + str(kansai_main_power_supply[i]) + 'です。')
+            if len(tokyo_kansai_diff) == 0:
+                print('東京電力と関西電力のメインの電源構成は同じです。')
+            else:
+                print('東京電力と関西電力のメインの電源構成の差異は' + str(tokyo_kansai_diff) + 'があるかどうかです。')
+
 
 
 
