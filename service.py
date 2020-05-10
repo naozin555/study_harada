@@ -124,6 +124,17 @@ class Service(object):
                           )
         return percentage
 
+    # 辞書化
+    def dict(self):
+        d = {'年月': self.date, '原子力': self.nuclear, '火力': self.thermal,
+             '水力': self.water, '地熱': self.geo_thermal, 'バイオマス': self.biomass,
+             '太陽光発電実績': self.solar, '太陽光出力制御量': self.controlled_solar,
+             '風力発電実績': self.wind, '風力出力制御量': self.controlled_wind,
+             '揚水': self.pumped_water, '連系線': self.interconnection
+             }
+        return d
+
+
     # 月の需給を表示するメソッド
     def display_month(self):
         print('年月：' + self.date + ',',
@@ -139,6 +150,27 @@ class Service(object):
               '揚水：{:.2f}%,'.format(self.pumped_water),
               '連系線：{:.2f}%'.format(self.interconnection)
               )
+
+    def max_sort(self):
+        sorted_data = {}
+        dict_size = len(self)
+        dict_values = list(self.values())
+        dict_headers = list(self.keys())
+        print(dict_values)
+        print(dict_headers)
+        for i in 0, dict_size-1, 1:
+            for j in range(1, dict_size-1-i, 1):
+                if dict_values[j] < dict_values[j + 1]:
+                    tmp_dict = {dict_headers[j + 1]: dict_values[j + 1]}
+                    sorted_data.update(tmp_dict)
+                    tmp_value = dict_values[j]
+                    dict_values[j] = dict_values[j + 1]
+                    dict_values[j + 1] = tmp_value
+                    tmp_header = dict_headers[j + 1]
+                    dict_headers[j] = dict_headers[j]
+                    dict_headers[j + 1] = tmp_header
+        print(sorted_data)
+
 
 
 class ServiceKansai(Service):
@@ -171,15 +203,3 @@ class ServiceKansai(Service):
                          )
             datas_list.append(datas)
         return datas_list
-
-
-class Compare(object):
-    def compare(self, tokyo_data, kansai_data):
-        tokyo_thermal_and_nuclear = tokyo_data.thermal + tokyo_data.nuclear
-        print('東京電力　原子力：{:.2f}% + 火力：{:.2f}% = {:.2f}%'
-              .format(tokyo_data.nuclear, tokyo_data.thermal,
-                      tokyo_thermal_and_nuclear))
-        kansai_thermal_and_nuclear = kansai_data.thermal + kansai_data.nuclear
-        print('関西電力　原子力：{:.2f}% + 火力：{:.2f}% = {:.2f}%'
-              .format(kansai_data.nuclear, kansai_data.thermal,
-                      kansai_thermal_and_nuclear))

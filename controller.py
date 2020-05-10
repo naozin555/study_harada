@@ -1,7 +1,7 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from service import Service, ServiceKansai, Compare
+from service import Service, ServiceKansai
 
 
 class Controller(object):
@@ -35,16 +35,25 @@ class Controller(object):
 
             if area == 'Tokyo':
                 print('東京電力の需給割合')
+                tokyo_data = []
                 for month in month_list:
-                    sum_month_Tokyo = Service.sum(datas_list, month)
-                    percentage_month_Tokyo = Service.percentage(sum_month_Tokyo)
-                    Service.display_month(percentage_month_Tokyo)
+                    sum_month_tokyo = Service.sum(datas_list, month)
+                    percentage_month_tokyo = Service.percentage(sum_month_tokyo)
+                    # Service.display_month(percentage_month_tokyo)
+                    tokyo_data.append(Service.dict(percentage_month_tokyo))
+                print(tokyo_data)
 
             if area == 'Kansai':
-                print('関西電力の需給割合')
+                # print('関西電力の需給割合')
+                kansai_data = []
                 for month in month_list:
-                    sum_month_Kansai = ServiceKansai.sum(datas_list, month)
-                    percentage_month_Kansai = ServiceKansai.percentage(sum_month_Kansai)
-                    ServiceKansai.display_month(percentage_month_Kansai)
+                    sum_month_kansai = ServiceKansai.sum(datas_list, month)
+                    percentage_month_kansai = ServiceKansai.percentage(sum_month_kansai)
+                    # ServiceKansai.display_month(percentage_month_kansai)
+                    kansai_data.append(Service.dict(percentage_month_kansai))
 
-        Compare.compare(2019/4, percentage_month_Tokyo, percentage_month_Kansai)
+
+        for tokyo_datum in tokyo_data:
+            Service.max_sort(tokyo_datum)
+
+        # PowerSupplyAnalyzer.compare(2019/4, percentage_month_Tokyo, percentage_month_Kansai)
