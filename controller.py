@@ -18,7 +18,8 @@ class Controller(object):
                 datas_list = []
                 datas_list = Service.input_data(data_list)
             elif area == 'Kansai':
-                raw_data = ServiceKansai.file_open('area_jyukyu_jisseki_2019.csv')
+                raw_data = ServiceKansai.file_open(
+                           'area_jyukyu_jisseki_2019.csv')
                 header = raw_data[0]
                 data_list = raw_data[1]
                 datas_list = []
@@ -34,31 +35,30 @@ class Controller(object):
                 month_list.append(month_list[m] + relativedelta(months=1))
 
             if area == 'Tokyo':
-                # print('東京電力の需給割合')
                 tokyo_data = []
                 for month in month_list:
                     sum_month_tokyo = Service.sum(datas_list, month)
-                    percentage_month_tokyo = Service.percentage(sum_month_tokyo)
-                    # Service.display_month(percentage_month_tokyo)
+                    percentage_month_tokyo = Service.percentage(
+                                             sum_month_tokyo)
                     tokyo_data.append(Service.dict(percentage_month_tokyo))
-                # print(tokyo_data)
 
             if area == 'Kansai':
-                # print('関西電力の需給割合')
                 kansai_data = []
                 for month in month_list:
                     sum_month_kansai = ServiceKansai.sum(datas_list, month)
-                    percentage_month_kansai = ServiceKansai.percentage(sum_month_kansai)
-                    # ServiceKansai.display_month(percentage_month_kansai)
+                    percentage_month_kansai = ServiceKansai.percentage(
+                                              sum_month_kansai)
                     kansai_data.append(Service.dict(percentage_month_kansai))
-                # print(kansai_data)
 
         tokyo_main_power_supply = []
         for tokyo_datum in tokyo_data:
             sorted_tokyo_data = Service.max_sort(tokyo_datum)
-            tokyo_main_power_supply.append(Service.power_supply_analysis(sorted_tokyo_data))
+            tokyo_main_power_supply.append(Service.power_supply_analysis
+                                           (sorted_tokyo_data))
         kansai_main_power_supply = []
         for kansai_datum in kansai_data:
             sorted_kansai_data = Service.max_sort(kansai_datum)
-            kansai_main_power_supply.append(Service.power_supply_analysis(sorted_kansai_data))
-        Service.compare(month_list, tokyo_main_power_supply, kansai_main_power_supply)
+            kansai_main_power_supply.append(Service.power_supply_analysis
+                                            (sorted_kansai_data))
+        Service.compare(month_list,
+                        tokyo_main_power_supply, kansai_main_power_supply)

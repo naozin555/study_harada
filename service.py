@@ -152,15 +152,12 @@ class Service(object):
               )
 
     def max_sort(self):
-        sorted_data = {}
         dict_size = len(self)
         dict_values = list(self.values())
         dict_headers = list(self.keys())
         for i in range(0, dict_size-1, 1):
             for j in range(1, dict_size-1-i, 1):
                 if dict_values[j] < dict_values[j + 1]:
-                    tmp_dict = {dict_headers[j + 1]: dict_values[j + 1]}
-                    sorted_data.update(tmp_dict)
                     tmp_value = dict_values[j]
                     dict_values[j] = dict_values[j + 1]
                     dict_values[j + 1] = tmp_value
@@ -171,25 +168,45 @@ class Service(object):
 
     def power_supply_analysis(self):
         main_power_supply = []
+        main_power_supply_value = []
         sum = 0
         for i in range(1, len(self[1]) - 1, 1):
             if sum < 70.0:
                 sum = sum + self[1][i]
                 main_power_supply.append(self[0][i])
-        return main_power_supply
+                main_power_supply_value.append(str(round(self[1][i], 2)))
+        return main_power_supply, main_power_supply_value
 
     def compare(self, tokyo_main_power_supply, kansai_main_power_supply):
         for i in range(0, len(self), 1):
-            tokyo_kansai_diff = set(tokyo_main_power_supply[i]) ^ set(kansai_main_power_supply[i])
+            tokyo_kansai_diff = set(tokyo_main_power_supply[i][0]) \
+                                ^ set(kansai_main_power_supply[i][0])
             print(self[i].strftime("{}/{}".format(self[i].year, self[i].month)))
-            print('東京電力のメイン電源は' + str(tokyo_main_power_supply[i]) + 'です。')
-            print('関西電力のメイン電源は' + str(kansai_main_power_supply[i]) + 'です。')
+            if len(tokyo_main_power_supply[i][0]) >= 2:
+                print('東京電力のメイン電源は' + 'と'.join(tokyo_main_power_supply[i][0])
+                      + 'です。（総供給量に対する内訳はそれぞれ'
+                      + '%と'.join(tokyo_main_power_supply[i][1])
+                      + '%です。）')
+            else:
+                print('東京電力のメイン電源は'
+                      + 'と'.join((tokyo_main_power_supply[i][0]))
+                      + 'です。（総供給量に対する内訳は{}%です。）'
+                      .format(''.join(tokyo_main_power_supply[i][1])))
+            if len(kansai_main_power_supply[i][0]) >= 2:
+                print('関西電力のメイン電源は' + 'と'.join(kansai_main_power_supply[i][0])
+                      + 'です。（総供給量に対する内訳はそれぞれ'
+                      + '%と'.join(kansai_main_power_supply[i][1])
+                      + '%です。）')
+            else:
+                print('関西電力のメイン電源は'
+                      + 'と'.join((kansai_main_power_supply[i][0]))
+                      + 'です。（総供給量に対する内訳は{}%です。）'
+                      .format(''.join(kansai_main_power_supply[i][1])))
             if len(tokyo_kansai_diff) == 0:
                 print('東京電力と関西電力のメインの電源構成は同じです。')
             else:
-                print('東京電力と関西電力のメインの電源構成の差異は' + str(tokyo_kansai_diff) + 'があるかどうかです。')
-
-
+                print('東京電力と関西電力のメインの電源構成の差異は'
+                      + 'と'.join(tokyo_kansai_diff) + 'があるかどうかです。')
 
 
 class ServiceKansai(Service):
